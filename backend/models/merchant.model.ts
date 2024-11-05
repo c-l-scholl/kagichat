@@ -6,7 +6,7 @@ const merchantSchema = new mongoose.Schema({
 		required: true,
 	}, 
 	uid: {
-		type: Number,
+		type: String,
 		required: true,
 	},
 	publicKey: {
@@ -21,6 +21,6 @@ const merchantSchema = new mongoose.Schema({
 	timestamps: true
 });
 
-const merchant = mongoose.model("Merchant", merchantSchema);
+const Merchant = mongoose.model("Merchant", merchantSchema);
 
-export default merchant;
+export default Merchant;
