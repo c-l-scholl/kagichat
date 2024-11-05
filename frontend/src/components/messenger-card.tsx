@@ -18,7 +18,7 @@ const MessengerCard = ({ merchantName, dateCreated }: MessengerCardProps) => {
 			<Card.Header>
 				<Heading size="md">{merchantName}</Heading>
 			</Card.Header>
-			<Card.Body color="fg.muted">
+			<Card.Body color="fg.info">
 				{`Member since ${strMerchantCreatedDate}`}
 			</Card.Body>
 		</Card.Root>

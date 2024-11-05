@@ -9,6 +9,7 @@ import Root from './routes/root/root';
 import ErrorPage from './error-page';
 import MessengersPage from './routes/messengers-page';
 import AboutPage from './routes/about/about-page';
+import "./index.css";
 
 const router = createBrowserRouter([
   { 
