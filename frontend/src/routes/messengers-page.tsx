@@ -2,7 +2,9 @@
 const MessengersPage = () => {
 
 	return (
-		<></>
+		<>
+			
+		</>
 	)
 }
 
