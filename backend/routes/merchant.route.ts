@@ -18,14 +18,27 @@ type MerchantType = {
 /**
  * Get merchant details.
  * 
- * @route GET api/users/
+ * @route GET api/merchants/
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @throws {BadRequestError} If the user with the specified ID is not found
+ * @throws {BadRequestError} If the limit is not a number
  */
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+
 	try {
+		if (req.query.limit && typeof req.query.limit == "string") {
+			const queryLimit: number = parseInt(req.query.limit);
+
+			if (isNaN(queryLimit) || queryLimit <= 0 || queryLimit > Number.MAX_SAFE_INTEGER) {
+				throw new BadRequestError({
+					code: 400,
+					message: `Please enter a positive number for the limit`,
+				});
+			}
+			const merchantsLimit = await Merchant.find({}).limit(queryLimit);
+			return res.status(200).json(merchantsLimit);
+		}
 		const merchants = await Merchant.find({});
 		res.status(200).json(merchants);
 	} catch (err) {
@@ -35,13 +48,13 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * Get a specific user 
+ * Get a specific merchant 
  * 
- * @route GET api/users/:id
+ * @route GET api/merchants/:id
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @throws {BadRequestError} If the user with the specified ID is not found
+ * @throws {BadRequestError} If the merchant with the specified ID is not found
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -56,13 +69,13 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * Create user details.
+ * Create merchant details.
  * 
- * @route POST api/users
+ * @route POST api/merchants
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @throws {BadRequestError} If the user with the specified ID is not found
+ * @throws {BadRequestError} If the merchant with the specified ID is not found
  */
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 	const userInput = req.body;
@@ -95,13 +108,13 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * Update user details.
+ * Update merchant details.
  * 
- * @route PUT api/users/:id
+ * @route PUT api/merchants/:id
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @throws {BadRequestError} If the user with the specified ID is not found
+ * @throws {BadRequestError} If the merchant with the specified ID is not found
  */
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 	const uid = req.params.id;
@@ -116,13 +129,13 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * Delete a user.
+ * Delete a merchant.
  * 
- * @route DELETE api/users/:id
+ * @route DELETE api/merchants/:id
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @throws {BadRequestError} If the user with the specified ID is not found
+ * @throws {BadRequestError} If the merchant with the specified ID is not found
  */
 router.delete("/:id",	async (req: Request, res: Response, next: NextFunction) => {
 		try {
