@@ -89,23 +89,21 @@ const createMerchant = async (
 		});
 	}
 
-	const newMerchant: MerchantType = {
-		merchantName: userInput.merchantName,
-		hashedPwd: userInput.merchantPassword, // TODO: HASH THE PASSWORD
-		uid: uuidV4(),
-		publicKey: "wow", // TODO: generate public key
-	};
+	const signupMerchant = await Merchant.signup(userInput.merchantName, userInput.merchantPassword);
+
+	// const newMerchant: MerchantType = {
+	// 	merchantName: signupMerchant.merchantName,
+	// 	hashedPwd: signupMerchant.hashedPwd, // TODO: HASH THE PASSWORD
+	// 	uid: signupMerchant.uid,
+	// 	publicKey: signupMerchant.publicKey, // TODO: generate public key
+	// };
 
 	// TODO: GENERATE PRIVATE KEY
 
-	const newMongoMerchant = new Merchant(newMerchant);
+	const newMongoMerchant = new Merchant(signupMerchant);
 	try {
 		await newMongoMerchant.save();
-		res
-			.status(201)
-			.json({
-				message: `User with id '${newMongoMerchant.uid}' was created successfully`,
-			});
+		res.status(201).json({ message: `User with id '${newMongoMerchant.uid}' was created successfully` });
 	} catch (err) {
 		console.error("Error querying data:", err);
 		next(err);

@@ -4,6 +4,7 @@ import {
 	getMerchantByID,
 	getMerchants,
 	updateMerchant,
+	createMerchant
 } from "../controller/merchant.controller.js";
 
 const router = express.Router();
@@ -18,9 +19,14 @@ router.get("/", getMerchants);
 router.get("/:id", getMerchantByID);
 
 /**
- * Create merchant details.
+ * Create merchant details for signup.
  */
-router.post("/", updateMerchant);
+router.post("/signup", createMerchant);
+
+/**
+ * Login Merchant
+ */
+router.post("/login", )
 
 /**
  * Update merchant details.
