@@ -1,0 +1,35 @@
+body {
+  background-color: #282c34;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: x-large;
+	margin-bottom: 1rem;;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: large;
+	margin-bottom: 0.5rem;
+}
+
+.about-container {
+  max-width: 728px;
+  margin: 0 auto;
+}
+
+.about-container section {
+	text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+	align-items: center;
+  min-height: 100vh;
+  background-color: rgb(40, 37, 53);
+}
+
+
+section div {
+	padding: 1rem;
+}

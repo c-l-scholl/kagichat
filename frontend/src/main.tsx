@@ -8,7 +8,7 @@ import {
 import Root from './routes/root/root';
 import ErrorPage from './error-page';
 import MessengersPage from './routes/messengers-page';
-import AboutPage from './routes/about-page';
+import AboutPage from './routes/about/about-page';
 
 const router = createBrowserRouter([
   { 
