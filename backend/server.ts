@@ -1,14 +1,14 @@
 import express from "express";
-import merchants from "./routes/merchant.route.ts"; 
+import merchants from "./routes/merchant.route.js"; 
 import dotenv from "dotenv";
 import connectDB from "./config/db.js"
-import notFound from "./middleware/notFound.ts";
-import logger from "./middleware/logger.ts";
+import notFound from "./middleware/notFound.js";
+import logger from "./middleware/logger.js";
 
 // Recommended by Mason Hu on Medium
 // Link: https://medium.com/@xiaominghu19922/proper-error-handling-in-express-server-with-typescript-8cd4ffb67188
 import "express-async-errors";
-import errorHandler from "./middleware/errorHandler.ts"
+import errorHandler from "./middleware/errorHandler.js"
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;

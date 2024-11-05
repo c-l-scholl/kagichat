@@ -1,5 +1,5 @@
 
-import { CustomError } from "./CustomError";
+import { CustomError } from "./CustomError.js";
 
 export default class BadRequestError extends CustomError {
 	private static readonly mStatus = 400;
