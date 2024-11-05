@@ -1,0 +1,72 @@
+body {
+  background-color: #282c34;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: x-large;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: large
+}
+
+.App {
+  text-align: center;
+  max-width: 728px;
+  margin: 0 auto;
+}
+
+.App header {
+  background-color: #181717;
+  height: 10vh;
+  min-height: 50px;
+  color: white;
+  position: sticky;
+  width: 100%;
+  max-width: 728px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.App section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+	align-items: center;
+  min-height: 100vh;
+  background-color: rgb(40, 37, 53);
+}
+
+.info-container {
+	height: 100%;
+	width: 80%;
+}
+
+.info-container h2 {
+	margin-bottom: 1rem;
+}
+
+.info-container p {
+	margin-bottom: 1rem;
+}
+
+.sign-in-form {
+	display: flex;
+	flex-direction: column;
+	width:65%;
+	justify-content: center;
+	align-items: center;
+	margin: 1rem;
+}
+
+.sign-in-form Input {
+	margin-bottom: 1rem;
+}
+

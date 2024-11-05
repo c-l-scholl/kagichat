@@ -1,14 +1,14 @@
+import { Provider as ChakraProvider } from "@/components/ui/provider";
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css'
-import Root from './routes/root.tsx';
-import ErrorPage from './error-page.tsx';
-import MessengersPage from './routes/messengers-page.tsx';
-import AboutPage from './routes/about-page.tsx';
+import Root from './routes/root/root';
+import ErrorPage from './error-page';
+import MessengersPage from './routes/messengers-page';
+import AboutPage from './routes/about-page';
 
 const router = createBrowserRouter([
   { 
@@ -29,6 +29,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ChakraProvider>
+      <RouterProvider router={router} />
+    </ChakraProvider>
   </StrictMode>,
 )
