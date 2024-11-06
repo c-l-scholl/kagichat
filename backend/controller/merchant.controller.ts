@@ -4,6 +4,23 @@ import { v4 as uuidV4 } from "uuid";
 import Merchant from "../models/merchant.model.js";
 import { MerchantType } from "../utils/types.js";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { sign } from "crypto";
+
+dotenv.config();
+
+const createToken = (_id: string) => {
+	const tokenSecret: string = process.env.SECRET || "";
+	if (!tokenSecret) {
+		throw new BadRequestError({
+			code: 500,
+			message: "JWT secret is invalid"
+		})
+	}
+	return jwt.sign({_id}, tokenSecret, { expiresIn: "3d"});
+}
+
 
 const getMerchants = async (
 	req: Request,
@@ -67,7 +84,7 @@ const getMerchantByID = async (
 };
 
 /**
- * Create merchant details.
+ * Create merchant details for signup.
  *
  * @route POST api/merchants
  * @param {Request} req - Express request object
@@ -75,7 +92,7 @@ const getMerchantByID = async (
  * @param {NextFunction} next - Express next middleware function
  * @throws {BadRequestError} If the merchant with the specified ID is not found
  */
-const createMerchant = async (
+const signUpNewMerchant = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -88,27 +105,51 @@ const createMerchant = async (
 			message: `Please provide all necessary fields`,
 		});
 	}
-
-	const signupMerchant = await Merchant.signup(userInput.merchantName, userInput.merchantPassword);
-
-	// const newMerchant: MerchantType = {
-	// 	merchantName: signupMerchant.merchantName,
-	// 	hashedPwd: signupMerchant.hashedPwd, // TODO: HASH THE PASSWORD
-	// 	uid: signupMerchant.uid,
-	// 	publicKey: signupMerchant.publicKey, // TODO: generate public key
-	// };
-
-	// TODO: GENERATE PRIVATE KEY
-
-	const newMongoMerchant = new Merchant(signupMerchant);
 	try {
+		const signupMerchant = await Merchant.signup(userInput.merchantName, userInput.merchantPassword);
+
+		const token: string = createToken(signupMerchant.uid);
+
+		// const newMerchant: MerchantType = {
+		// 	merchantName: signupMerchant.merchantName,
+		// 	hashedPwd: signupMerchant.hashedPwd, 
+		// 	uid: signupMerchant.uid,
+		// 	publicKey: signupMerchant.publicKey, // TODO: generate public key
+		// };
+
+		// TODO: GENERATE PRIVATE KEY
+
+		const newMongoMerchant = new Merchant(signupMerchant);
+	
 		await newMongoMerchant.save();
-		res.status(201).json({ message: `User with id '${newMongoMerchant.uid}' was created successfully` });
+		res.status(201).json({ message: `User with id '${newMongoMerchant.uid}' was created successfully`, token});
 	} catch (err) {
 		console.error("Error querying data:", err);
 		next(err);
 	}
 };
+
+const loginMerchant = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const userInput = req.body;
+	try {
+		if (!userInput.merchantName || !userInput.merchantPassword) {
+			throw new BadRequestError({
+				code: 400,
+				message: `Please provide all necessary fields`,
+			});
+		}
+		const merchantToLogin = await Merchant.login(userInput.merchantName, userInput.merchantPassword);
+		const token: string = createToken(merchantToLogin.uid);
+		res.status(200).json({ message: `User with id '${merchantToLogin.uid}' was logged in successfully`, token});
+	} catch (err) {
+		console.error("Error querying data:", err);
+		next(err);
+	}
+}
 
 /**
  * Update merchant details.
@@ -176,7 +217,8 @@ const deleteMerchant = async (
 export {
 	getMerchants,
 	getMerchantByID,
-	createMerchant,
+	signUpNewMerchant,
 	updateMerchant,
 	deleteMerchant,
+	loginMerchant
 };

@@ -16,6 +16,7 @@ interface IMerchant extends Document {
 // Define the model interface, including the static method `signup`
 interface IMerchantModel extends Model<IMerchant> {
   signup(merchantName: string, merchantPassword: string): Promise<IMerchant>;
+  login(merchantName: string, merchantPassword: string): Promise<IMerchant>;
 }
 
 const merchantSchema = new Schema<IMerchant>({
@@ -46,10 +47,22 @@ const merchantSchema = new Schema<IMerchant>({
 merchantSchema.statics.signup = async function(merchantName: string, merchantPassword: string) {
 	const existingUser = await this.findOne({ merchantName });
 
+	// validation
+	if (!merchantName.trim() || !merchantPassword.trim()) {
+		throw new BadRequestError({
+			code: 400,
+			message: "All fields must be filled"
+		})
+	}
+
+	// normally would add validator checks for email and strong password
+
+	// if (!validator.isStrongPassword(merchantPassword))
+
 	if (existingUser) {
 		throw new BadRequestError({
 			code: 400,
-			message: "User already exists"
+			message: "Username already exists"
 		})
 	}
 	
@@ -63,6 +76,34 @@ merchantSchema.statics.signup = async function(merchantName: string, merchantPas
 	const newMerchant = await this.create({ merchantName, hashedPwd: pwdHash, uid: uuidV4(), publicKey: uuidV4() });
 
 	return newMerchant;
+}
+
+merchantSchema.statics.login = async function(merchantName: string, merchantPassword: string) {
+	if (!merchantName.trim() || !merchantPassword.trim()) {
+		throw new BadRequestError({
+			code: 400,
+			message: "All fields must be filled"
+		})
+	}
+
+	const merchant = await this.findOne({ merchantName });
+
+	if (!merchant) {
+		throw new BadRequestError({
+			code: 400,
+			message: "Incorrect username"
+		})
+	}
+
+	const match = await argon2.verify(merchant.hashedPwd, merchantPassword);
+	if (!match) {
+		throw new BadRequestError({
+			code: 400,
+			message: "Incorrect Password"
+		})
+	}
+
+	return merchant;
 }
 
 const Merchant = mongoose.model<IMerchant, IMerchantModel>("Merchant", merchantSchema);
