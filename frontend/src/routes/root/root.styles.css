@@ -45,6 +45,7 @@ h2 {
 } */
 
 .info-container {
+  margin-top: 2rem;
 	height: 100%;
 	width: 80%;
 }
@@ -54,13 +55,13 @@ h2 {
 }
 
 .info-container p {
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 .sign-in-form {
 	display: flex;
 	flex-direction: column;
-	width:65%;
+	width:100%;
 	justify-content: center;
 	align-items: center;
 	margin: 1rem;
@@ -68,5 +69,10 @@ h2 {
 
 .sign-in-form Input {
 	margin-bottom: 1rem;
+}
+
+Button {
+  margin-top: 1rem;
+  width: 50%;
 }
 

@@ -7,9 +7,10 @@ import {
 } from "react-router-dom";
 import Root from './routes/root/root';
 import ErrorPage from './error-page';
-import MessengersPage from './routes/messengers-page';
+import MessengersPage from './routes/messengers/messengers-page';
 import AboutPage from './routes/about/about-page';
 import "./index.css";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const router = createBrowserRouter([
   { 
@@ -30,8 +31,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <AuthContextProvider>
+      <ChakraProvider>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </AuthContextProvider>
   </StrictMode>,
 )

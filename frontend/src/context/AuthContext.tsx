@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useReducer } from "react";
+import { createContext, ReactNode, useReducer } from "react";
 
 type AuthUser = {
 	uid: string;
@@ -70,7 +70,7 @@ const AuthContextProvider = ({ children }: AuthProviderProps) => {
 
 }
 
-const useAuth = () => useContext(AuthContext);
 
-export { AuthContext, AuthContextProvider, useAuth };
+
+export { AuthContext, AuthContextProvider };
 
