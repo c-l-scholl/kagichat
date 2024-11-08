@@ -5,6 +5,7 @@ body {
 h1 {
 	font-weight: bold;
 	font-size: x-large;
+  margin: 0;
 }
 
 h2 {
@@ -18,22 +19,7 @@ h2 {
   margin: 0 auto;
 }
 
-.App header {
-  background-color: #181717;
-  height: 10vh;
-  min-height: 50px;
-  color: white;
-  position: sticky;
-  width: 100%;
-  max-width: 728px;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99;
-  padding: 10px;
-  box-sizing: border-box;
-}
+
 
 .App section {
   display: flex;
@@ -43,6 +29,12 @@ h2 {
   min-height: 100vh;
   background-color: rgb(40, 37, 53);
 } */
+
+.App header {
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 4rem;
+}
 
 .info-container {
   margin-top: 2rem;

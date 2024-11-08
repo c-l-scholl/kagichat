@@ -2,13 +2,13 @@
   background-color: #282c34;
 } */
 
-h1 {
+.intro-container h1 {
 	font-weight: bold;
 	font-size: x-large;
-	margin-bottom: 1rem;;
+	margin-bottom: 1rem;
 }
 
-h2 {
+.intro-container h2 {
 	font-weight: bold;
 	font-size: large;
 	margin-bottom: 0.5rem;
@@ -25,6 +25,6 @@ h2 {
   background-color: rgb(40, 37, 53);
 } 
 
-section div {
+.about-container section div {
 	padding: 1rem;
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Signup from "@/components/signup";
 import Login from "@/components/login";
 import { Button } from "@chakra-ui/react";
+import LogoutButton from "@/components/logout-button";
 
 const Root = () => {
 	const [hasAccount, setHasAccount] = useState<boolean>(false);
@@ -15,6 +16,7 @@ const Root = () => {
 		<div className="App">
 			<header className="App-header">
 				<h1>Sign-In</h1>
+				<LogoutButton />
 			</header>
 			<section>
 				

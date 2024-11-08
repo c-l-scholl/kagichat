@@ -2,16 +2,16 @@ import { useState } from "react";
 import useAuthContext from "@/hooks/useAuthContext";
 import { AuthActionKind } from "@/utils/types";
 
-const useSignup = () => {
-	const [signupError, setSignupError] = useState(null);
-	const [isSignupLoading, setisSignupLoading] = useState<boolean>(false);
+const useLogin = () => {
+	const [loginError, setLoginError] = useState(null);
+	const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
 	const { dispatch } = useAuthContext();
 
-	const signup = async (merchantName: string, merchantPassword: string) => {
-		setisSignupLoading(true);
-		setSignupError(null);
+	const login = async (merchantName: string, merchantPassword: string) => {
+		setIsLoginLoading(true);
+		setLoginError(null);
 
-		const response = await fetch("/api/merchants/signup", {
+		const response = await fetch("/api/merchants/login", {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json"
@@ -22,8 +22,8 @@ const useSignup = () => {
 		const jsonRes = await response.json();
 
 		if (!response.ok) {
-			setisSignupLoading(false);
-			setSignupError(jsonRes.error);
+			setIsLoginLoading(false);
+			setLoginError(jsonRes.error);
 		}
 
 		if (response.ok) {
@@ -34,12 +34,12 @@ const useSignup = () => {
 			// update auth context
 			dispatch({ type: AuthActionKind.LOGIN, payload: jsonRes });
 
-			setisSignupLoading(false);
+			setIsLoginLoading(false);
 		}
 	}
 
-	return { signup, isSignupLoading, error: signupError };
+	return { login, isLoginLoading, error: loginError };
 
 }
 
-export default useSignup;
+export default useLogin;

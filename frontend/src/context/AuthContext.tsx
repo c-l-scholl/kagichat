@@ -1,28 +1,9 @@
 import { createContext, ReactNode, useReducer } from "react";
-
-type AuthUser = {
-	uid: string;
-	username: string;
-}
-
-type AuthState = {
-	isAuthenticated: boolean;
-	authUser: AuthUser | null;
-}
+import { AuthState, AuthAction, AuthActionKind } from "@/utils/types";
 
 interface IAuthContext {
 	state: AuthState;
 	dispatch: React.Dispatch<AuthAction>;
-}
-
-enum AuthActionKind {
-	LOGIN = "LOGIN",
-	LOGOUT = "LOGOUT"
-}
-
-interface AuthAction {
-	type: AuthActionKind;
-	payload: AuthUser;
 }
 
 const initialState: AuthState = {
