@@ -13,7 +13,7 @@ interface IMerchant extends Document {
   hashedPwd: string;
 }
 
-// Define the model interface, including the static method `signup`
+
 interface IMerchantModel extends Model<IMerchant> {
   signup(merchantName: string, merchantPassword: string): Promise<IMerchant>;
   login(merchantName: string, merchantPassword: string): Promise<IMerchant>;

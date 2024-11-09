@@ -9,6 +9,10 @@ import {
 } from "../controller/merchant.controller.js";
 
 const router = express.Router();
+
+// will only use in messages
+// router.use(requireAuth);
+
 /**
  * Get merchant details.
  */

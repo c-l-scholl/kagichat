@@ -6,7 +6,6 @@ import { MerchantType } from "../utils/types.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { sign } from "crypto";
 
 dotenv.config();
 
