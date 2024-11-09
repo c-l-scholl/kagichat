@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useReducer } from "react";
+import { createContext, ReactNode, useEffect, useReducer } from "react";
 import { AuthState, AuthAction, AuthActionKind } from "@/utils/types";
 
 interface IAuthContext {
@@ -40,6 +40,17 @@ const AuthContext = createContext<IAuthContext>({
 
 const AuthContextProvider = ({ children }: AuthProviderProps) => {
 	const [state, dispatch] = useReducer(authReducer, initialState);
+
+	useEffect(() => {
+		const storedMerchant: string = localStorage.getItem("merchant") ?? "";
+		if (!storedMerchant) {
+			return
+		}
+		const authUser = JSON.parse(storedMerchant);
+		if (authUser) {
+			dispatch({ type: AuthActionKind.LOGIN, payload: authUser })
+		}
+	}, []);
 
 	console.log("AuthContext state: ", state);
 
