@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import BadRequestError from "./errorTypes/BadRequestError";
+import BadRequestError from "./errorTypes/BadRequestError.js";
 import dotenv from "dotenv";
-import Merchant from "../models/merchant.model";
-import "../types/express";
+import Merchant from "../models/merchant.model.js";
+import "../types/express.d.js";
 
 const requireAuth = async (
 	req: Request,
@@ -25,14 +25,14 @@ const requireAuth = async (
 		const storedSecret = process.env.SECRET ?? "";
 		const decoded = jwt.verify(token, storedSecret) as JwtPayload;
 
-		const merchantId = decoded._id;
+		const merchantId: string = decoded._id;
 		if (!merchantId) {
 			throw new BadRequestError({
 				code: 400,
 				message: "Invalid authorization token",
 			});
 		}
-		req.merchant = await Merchant.findOne({ _id: merchantId });
+		req.merchant = await Merchant.findOne({ uid: merchantId });
 		if (!req.merchant) {
 			res.status(404).json({ error: "merchant not found" });
 			return;

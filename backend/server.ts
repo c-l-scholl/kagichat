@@ -1,5 +1,6 @@
 import express from "express";
 import merchants from "./routes/merchant.route.js"; 
+import messages from "./routes/message.route.js"
 import dotenv from "dotenv";
 import connectDB from "./config/db.js"
 import notFound from "./middleware/notFound.js";
@@ -24,6 +25,7 @@ app.use(logger);
 
 // Routing
 app.use("/api/merchants", merchants);
+app.use("/api/messages", messages);
 
 // Catch-all Not Found
 app.use(notFound);
