@@ -1,36 +1,4 @@
-body {
-  background-color: #282c34;
-}
-
-h1 {
-	font-weight: bold;
-	font-size: x-large;
-  margin: 0;
-}
-
-h2 {
-	font-weight: bold;
-	font-size: large
-}
-
-/* .App {
-  text-align: center;
-  max-width: 728px;
-  margin: 0 auto;
-}
-
-
-
-.App section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-	align-items: center;
-  min-height: 100vh;
-  background-color: rgb(40, 37, 53);
-} */
-
-.App header {
+.root .root-header {
   justify-content: space-around;
   align-items: center;
   padding: 0 4rem;
@@ -63,7 +31,7 @@ h2 {
 	margin-bottom: 1rem;
 }
 
-Button {
+.signup-button {
   margin-top: 1rem;
   width: 50%;
 }

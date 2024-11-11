@@ -152,7 +152,7 @@ const loginMerchant = async (
 		);
 		const token: string = createToken(merchantToLogin.uid);
 		res.status(200).json({
-			message: `User with id '${merchantToLogin.uid}' was logged in successfully`,
+			uid: merchantToLogin.uid,
 			token,
 		});
 	} catch (err) {

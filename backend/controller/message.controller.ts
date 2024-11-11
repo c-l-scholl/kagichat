@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import { Request, Response, NextFunction } from "express";
-import Message from "../models/message.model";
+import Message from "../models/message.model.js";
 import exp from "constants";
-import { MessageType } from "../utils/types";
-import BadRequestError from "../middleware/errorTypes/BadRequestError";
+import { MessageType } from "../utils/types.js";
+import BadRequestError from "../middleware/errorTypes/BadRequestError.js";
 
 dotenv.config();
 

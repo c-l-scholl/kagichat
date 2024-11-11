@@ -13,13 +13,12 @@ const Root = () => {
 	};
 
 	return (
-		<div className="App">
-			<header className="App-header">
+		<div className="root">
+			<header className="root-header">
 				<h1>Sign-In</h1>
 				<LogoutButton />
 			</header>
 			<section>
-				
 				<div className="sign-in-form">
 					<h2>Please sign up with a username and password</h2>
 					{hasAccount ? <Login /> : <Signup />}
@@ -30,7 +29,7 @@ const Root = () => {
 							? "If you don't have an account yet, click the button below to sign up"
 							: "If you already have account, click the button below to log in"}
 					</p>
-					<Button variant={"surface"} onClick={() => handleToggleLoginType()}>{`Click Here to ${
+					<Button className="signup-button" variant={"surface"} onClick={() => handleToggleLoginType()}>{`Click Here to ${
 						hasAccount ? "Sign Up" : "Log In"
 					}`}</Button>
 				</div>
