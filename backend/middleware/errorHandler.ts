@@ -7,6 +7,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
 	} else {
 		res.status(500).json({ message: `No user was not found`})
 	}
+	next();
 }
 
 

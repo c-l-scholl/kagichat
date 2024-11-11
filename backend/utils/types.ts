@@ -5,4 +5,13 @@ type MerchantType = {
 	hashedPwd: string;
 };
 
-export { MerchantType };
+type MessageType = {
+	conversationId: string;
+	senderId: string;
+	receiverId: string;
+	signature: Buffer;
+	encryptedText: string;
+	createdAt: Date;
+}
+
+export { MerchantType, MessageType };

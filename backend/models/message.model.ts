@@ -4,9 +4,11 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 interface IMessage extends Document {
   createdAt: Date;
   updatedAt: Date;
-  senderUid: string;
+  senderId: string;
+	receiverId: string,
+	conversationId: string,
   encryptedText: string;
-  recipPublicKey: string;
+  //recipPublicKey: string;
 	signature: Buffer;
 }
 
@@ -17,7 +19,17 @@ interface IMessage extends Document {
 // }
 
 const messageSchema = new Schema<IMessage>({
-	senderUid: {
+	senderId: {
+		type: String,
+		required: true,
+		unique: true,
+	}, 
+	receiverId: {
+		type: String,
+		required: true,
+		unique: true,
+	}, 
+	conversationId: {
 		type: String,
 		required: true,
 		unique: true,
@@ -27,11 +39,11 @@ const messageSchema = new Schema<IMessage>({
 		required: true,
 		unique: true,
 	},
-	recipPublicKey: {
-		type: String,
-		required: true,
-		unique: true,
-	},
+	// recipPublicKey: {
+	// 	type: String,
+	// 	required: true,
+	// 	unique: true,
+	// },
 	signature: {
 		type: Buffer,
 		required: true,

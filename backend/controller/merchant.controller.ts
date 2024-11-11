@@ -14,12 +14,11 @@ const createToken = (_id: string) => {
 	if (!tokenSecret) {
 		throw new BadRequestError({
 			code: 500,
-			message: "JWT secret is invalid"
-		})
+			message: "JWT secret is invalid",
+		});
 	}
-	return jwt.sign({_id}, tokenSecret, { expiresIn: "3d"});
-}
-
+	return jwt.sign({ _id }, tokenSecret, { expiresIn: "3d" });
+};
 
 const getMerchants = async (
 	req: Request,
@@ -71,8 +70,8 @@ const getMerchantByID = async (
 		if (!mongoose.Types.ObjectId.isValid(_id)) {
 			throw new BadRequestError({
 				code: 400,
-				message: `Invalid Product Id of ${_id}`
-			})
+				message: `Invalid Product Id of ${_id}`,
+			});
 		}
 		const foundMerchant = await Merchant.findById(_id);
 		res.status(200).json(foundMerchant);
@@ -96,22 +95,25 @@ const signUpNewMerchant = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const userInput = req.body;
-
-	if (!userInput.merchantName || !userInput.merchantPassword) {
-		throw new BadRequestError({
-			code: 400,
-			message: `Please provide all necessary fields`,
-		});
-	}
 	try {
-		const signupMerchant = await Merchant.signup(userInput.merchantName, userInput.merchantPassword);
+		const userInput = req.body;
+
+		if (!userInput.merchantName || !userInput.merchantPassword) {
+			throw new BadRequestError({
+				code: 400,
+				message: `Please provide all necessary fields`,
+			});
+		}
+		const signupMerchant = await Merchant.signup(
+			userInput.merchantName,
+			userInput.merchantPassword
+		);
 
 		const token: string = createToken(signupMerchant.uid);
 
 		// const newMerchant: MerchantType = {
 		// 	merchantName: signupMerchant.merchantName,
-		// 	hashedPwd: signupMerchant.hashedPwd, 
+		// 	hashedPwd: signupMerchant.hashedPwd,
 		// 	uid: signupMerchant.uid,
 		// 	publicKey: signupMerchant.publicKey, // TODO: generate public key
 		// };
@@ -119,9 +121,12 @@ const signUpNewMerchant = async (
 		// TODO: GENERATE PRIVATE KEY
 
 		const newMongoMerchant = new Merchant(signupMerchant);
-	
+
 		await newMongoMerchant.save();
-		res.status(201).json({ message: `User with id '${newMongoMerchant.uid}' was created successfully`, token});
+		res.status(201).json({
+			message: `User with id '${newMongoMerchant.uid}' was created successfully`,
+			token,
+		});
 	} catch (err) {
 		console.error("Error querying data:", err);
 		next(err);
@@ -141,14 +146,20 @@ const loginMerchant = async (
 				message: `Please provide all necessary fields`,
 			});
 		}
-		const merchantToLogin = await Merchant.login(userInput.merchantName, userInput.merchantPassword);
+		const merchantToLogin = await Merchant.login(
+			userInput.merchantName,
+			userInput.merchantPassword
+		);
 		const token: string = createToken(merchantToLogin.uid);
-		res.status(200).json({ message: `User with id '${merchantToLogin.uid}' was logged in successfully`, token});
+		res.status(200).json({
+			message: `User with id '${merchantToLogin.uid}' was logged in successfully`,
+			token,
+		});
 	} catch (err) {
 		console.error("Error querying data:", err);
 		next(err);
 	}
-}
+};
 
 /**
  * Update merchant details.
@@ -169,12 +180,14 @@ const updateMerchant = async (
 	if (!mongoose.Types.ObjectId.isValid(_id)) {
 		throw new BadRequestError({
 			code: 400,
-			message: `Invalid Product Id of ${_id}`
-		})
+			message: `Invalid Product Id of ${_id}`,
+		});
 	}
 	try {
 		await Merchant.findByIdAndUpdate(_id, userInput, { new: true });
-		res.status(200).json({ message: `User with id '${_id}' was updated successfully` });
+		res
+			.status(200)
+			.json({ message: `User with id '${_id}' was updated successfully` });
 	} catch (err) {
 		console.error("Error querying data:", err);
 		next(err);
@@ -199,8 +212,8 @@ const deleteMerchant = async (
 	if (!mongoose.Types.ObjectId.isValid(_id)) {
 		throw new BadRequestError({
 			code: 400,
-			message: `Invalid Product Id of ${_id}`
-		})
+			message: `Invalid Product Id of ${_id}`,
+		});
 	}
 	try {
 		await Merchant.findByIdAndDelete(_id);
@@ -219,5 +232,5 @@ export {
 	signUpNewMerchant,
 	updateMerchant,
 	deleteMerchant,
-	loginMerchant
+	loginMerchant,
 };

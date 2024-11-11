@@ -6,8 +6,8 @@
 		"moduleResolution": "NodeNext",
     "outDir": "./dist",                    
     "esModuleInterop": true,           
-    "types": ["node"] //, "./types/express.d.ts"]                  
+    "types": ["node"]                  
   },
-  "include": ["src/**/*", "server.ts"],
+  "include": ["src/**/*", "server.ts", "./types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }
