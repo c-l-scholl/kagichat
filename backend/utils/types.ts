@@ -14,4 +14,6 @@ type MessageType = {
 	createdAt: Date;
 }
 
+
+
 export { MerchantType, MessageType };

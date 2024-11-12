@@ -18,6 +18,22 @@ interface AuthAction {
 	payload: AuthUser | null;
 }
 
-export type { AuthUser, AuthState, AuthAction };
+type MerchantType = {
+	merchantName: string;
+	publicKey: string;
+	uid: string;
+	createdAt: string;
+	// do not include password here
+};
+
+type MessageType = {
+	encryptedText: string;
+	uid: string;
+	signature: string;
+	senderPublicKey: string;
+	createdAt: string;
+};
+
+export type { AuthUser, AuthState, AuthAction, MerchantType, MessageType };
 
 export { AuthActionKind };

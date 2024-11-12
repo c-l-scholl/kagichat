@@ -1,24 +1,18 @@
 import MessengerCard from "@/components/messenger-card";
 import useAuth from "@/hooks/useAuthContext";
 import { useEffect, useState } from "react";
+import { MerchantType } from "@/utils/types";
 
-type Merchant = {
-	merchantName: string;
-	publicKey: string;
-	uid: string;
-	createdAt: string;
-	// do not include password here
-};
 
 const MessengersPage = () => {
-	const [merchants, setMerchants] = useState<Merchant[] | null>(null);
+	const [merchants, setMerchants] = useState<MerchantType[] | null>(null);
 	const { state } = useAuth();
 
 	useEffect(() => {
 		// get merchants from db
 		const getMerchants = async () => {
 			const res = await fetch("/api/merchants");
-			const data = (await res.json()) as Merchant[];
+			const data = (await res.json()) as MerchantType[];
 			const merchantData = data.filter((merchant) => merchant.uid != state.authUser?.uid)
 			console.log(merchantData);
 			setMerchants(merchantData);

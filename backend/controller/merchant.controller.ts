@@ -66,14 +66,15 @@ const getMerchantByID = async (
 	next: NextFunction
 ) => {
 	try {
-		const _id: string = req.params.id;
-		if (!mongoose.Types.ObjectId.isValid(_id)) {
-			throw new BadRequestError({
-				code: 400,
-				message: `Invalid Product Id of ${_id}`,
-			});
-		}
-		const foundMerchant = await Merchant.findById(_id);
+		const uid: string = req.params.id;
+		// if (!mongoose.Types.ObjectId.isValid(_id)) {
+		// 	throw new BadRequestError({
+		// 		code: 400,
+		// 		message: `Invalid Product Id of ${_id}`,
+		// 	});
+		// }
+		// const foundMerchant = await Merchant.findById(_id);
+		const foundMerchant = await Merchant.findOne({ uid });
 		res.status(200).json(foundMerchant);
 	} catch (err) {
 		console.error("Error querying data:", err);
