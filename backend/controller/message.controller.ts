@@ -27,7 +27,7 @@ const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
 		const userInput = req.body;
 		// get all parameters:
 		// senderId, recipientId, conversationId, encryptedText, signature
-		// frontend will calculate conversationId
+		// frontend will calculate conversationId (sort uids, append with "-", hash?)
 
 		if (
 			!userInput.senderId ||

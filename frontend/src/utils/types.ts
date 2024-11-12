@@ -28,12 +28,20 @@ type MerchantType = {
 
 type MessageType = {
 	encryptedText: string;
-	uid: string;
+	receiverUid: string;
+	senderUid: string;
 	signature: string;
 	senderPublicKey: string;
 	createdAt: string;
 };
 
-export type { AuthUser, AuthState, AuthAction, MerchantType, MessageType };
+type DisplayMessageType = {
+	text: string;
+	senderUid: string;
+	createdAt: string;
+
+}
+
+export type { AuthUser, AuthState, AuthAction, MerchantType, MessageType, DisplayMessageType };
 
 export { AuthActionKind };

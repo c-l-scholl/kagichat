@@ -22,7 +22,7 @@ const useEncryption = () => {
 		setMyPublicKey(data);
 	};
 
-	const getRecipientPublicKey = async (recipientUid: string) => {
+	const getRecipientPublicKey = async (recipientUid: string): Promise<string> => {
 		const res = await fetch(`/api/merchant/${recipientUid}`);
 		const recipientPublicKey = await res.json();
 		return recipientPublicKey;
