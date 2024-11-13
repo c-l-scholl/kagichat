@@ -27,6 +27,7 @@ type MerchantType = {
 };
 
 type MessageType = {
+	_id: string;
 	encryptedText: string;
 	receiverUid: string;
 	senderUid: string;
@@ -36,6 +37,7 @@ type MessageType = {
 };
 
 type DisplayMessageType = {
+	_id: string;
 	text: string;
 	senderUid: string;
 	createdAt: string;

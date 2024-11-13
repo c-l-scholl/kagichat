@@ -1,14 +1,18 @@
 import useAuth from "@/hooks/useAuthContext";
 import "./chat.styles.css";
-import { MerchantType, MessageType } from "@/utils/types";
+import { DisplayMessageType, MerchantType, MessageType } from "@/utils/types";
 import ChatMessage from "@/components/chat-message";
 import { useState, useRef, useEffect } from "react";
 import useEncryption from "@/hooks/useEncryption";
+import useMessaging from "@/hooks/useMessaging";
 
 const Chat = (props: { recieverMerchant: MerchantType }) => {
 	const { state } = useAuth();
+	const msgFetchTools = useMessaging();
 	const encTools = useEncryption();
-	const [messages, setMessages] = useState<MessageType[] | null>(null);
+	const [safeMessages, setSafeMessages] = useState<MessageType[] | null>(null);
+	const [readMessages, setReadMessages] = useState<DisplayMessageType[] | null>(null);
+	// maybe have list of encrypted messages and list of decrypted messages
 	const [conversationId, setConversationId] = useState<string>("");
 	const [receiverPublicKey, setReceiverPublicKey] = useState<string>("");
 	const [formValue, setFormValue] = useState<string>("");
@@ -39,7 +43,7 @@ const Chat = (props: { recieverMerchant: MerchantType }) => {
 
 	useEffect(() => {
 		dummy.current?.scrollIntoView({ behavior: "smooth" });
-	}, [messages]);
+	}, [safeMessages]);
 
 
 	// get messages at start of chat
@@ -58,9 +62,26 @@ const Chat = (props: { recieverMerchant: MerchantType }) => {
 		setConversationId(CryptoJS.SHA256(combined).toString());
 
 		// get messages from mongo
-		
+		const getConversationMessages = async() => {
+			const conversation  = await msgFetchTools.getConversation(conversationId);
+			setSafeMessages(conversation ?? null);
+		}
+		getConversationMessages();
 
+		// decrypt messages
 		
+		const preppedMessages = safeMessages?.map((msg) => {
+			const sharedSecret = encTools.deriveSharedSecret(receiverPublicKey);
+			const decryptedText = encTools.decryptMessage(msg.encryptedText, sharedSecret);
+			return {
+				_id: msg._id,
+				text: decryptedText,
+				senderUid: msg.senderUid,
+				createdAt: msg.createdAt
+			};
+		}) as DisplayMessageType[];
+		setReadMessages(preppedMessages);
+
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
@@ -76,8 +97,8 @@ const Chat = (props: { recieverMerchant: MerchantType }) => {
 	return (
 		<div className="chat-room">
 			<div className="message-container">
-				{messages &&
-					messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
+				{readMessages &&
+					readMessages.map((msg) => <ChatMessage key={msg._id} message={msg} />)}
 				<div ref={dummy}></div>
 			</div>
 
