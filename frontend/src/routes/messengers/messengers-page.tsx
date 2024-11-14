@@ -13,7 +13,7 @@ const MessengersPage = () => {
 		const getMerchants = async () => {
 			const res = await fetch("/api/merchants");
 			const data = (await res.json()) as MerchantType[];
-			const merchantData = data.filter((merchant) => merchant.uid != state.authUser?.uid)
+			const merchantData = data.filter((merchant) => merchant.uid !== state.authUser?.uid)
 			console.log(merchantData);
 			setMerchants(merchantData);
 		};
@@ -33,6 +33,7 @@ const MessengersPage = () => {
 							key={merchant.uid}
 							merchantName={merchant.merchantName}
 							dateCreated={merchant.createdAt}
+							merchantUid={merchant.uid}
 						/>
 					))}
 			</div>

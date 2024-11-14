@@ -13,6 +13,7 @@ const requireAuth = async (
 	// dotenv.config();
 
 	const { authorization } = req.headers;
+	console.log("Hello",authorization);
 
 	if (!authorization) {
 		res.status(401).json({ error: "Authorization token required" });

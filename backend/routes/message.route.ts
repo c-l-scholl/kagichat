@@ -4,7 +4,7 @@ import { getMessages, sendMessage } from "../controller/message.controller.js"
 
 const router = express.Router();
 
-router.use(requireAuth);
+//router.use(requireAuth);
 
 router.get("/:id", getMessages);
 

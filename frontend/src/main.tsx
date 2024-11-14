@@ -14,6 +14,7 @@ import AboutPage from './routes/about/about-page';
 import "./index.css";
 import { AuthContextProvider } from "./context/AuthContext";
 import MainLayout from "./layouts/main-layout/main-layout";
+import ChatPage from "@/routes/chat/chat"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Root/>} errorElement={<ErrorPage />} />
       <Route path="/messengers" element={<MessengersPage/>} errorElement={<ErrorPage />} />
       <Route path="/about" element={<AboutPage/>} errorElement={<ErrorPage />} />
+      <Route path="/:conversationId" element={<ChatPage />} errorElement={<ErrorPage />} />
     </Route>
   )
 )

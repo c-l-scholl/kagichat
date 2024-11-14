@@ -7,8 +7,8 @@ type MerchantType = {
 
 type MessageType = {
 	conversationId: string;
-	senderId: string;
-	receiverId: string;
+	senderUid: string;
+	receiverUid: string;
 	signature: Buffer;
 	encryptedText: string;
 	createdAt: Date;

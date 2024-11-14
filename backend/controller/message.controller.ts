@@ -43,15 +43,15 @@ const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
 		}
 
 		const newMessage = new Message({
-			senderId: userInput.senderId,
-			receiverId: userInput.receiverId,
+			senderUid: userInput.senderId,
+			receiverUid: userInput.receiverId,
 			conversationId: userInput.conversationId,
 			encryptedText: userInput.encryptedText,
 			signature: userInput.signature,
 		});
 
 		await newMessage.save();
-		res.status(201).json({ message: `Message sent from ${newMessage.senderId} to ${newMessage.receiverId}` });
+		res.status(201).json({ message: `Message sent from ${newMessage.senderUid} to ${newMessage.receiverUid}` });
 	} catch (err) {
 		console.error("Error sending message:", err);
 		next(err);

@@ -99,7 +99,7 @@ const signUpNewMerchant = async (
 	try {
 		const userInput = req.body;
 
-		if (!userInput.merchantName || !userInput.merchantPassword) {
+		if (!userInput.merchantName || !userInput.merchantPassword || !userInput.publicKey) {
 			throw new BadRequestError({
 				code: 400,
 				message: `Please provide all necessary fields`,
@@ -107,7 +107,8 @@ const signUpNewMerchant = async (
 		}
 		const signupMerchant = await Merchant.signup(
 			userInput.merchantName,
-			userInput.merchantPassword
+			userInput.merchantPassword,
+			userInput.publicKey
 		);
 
 		const token: string = createToken(signupMerchant.uid);
@@ -125,7 +126,8 @@ const signUpNewMerchant = async (
 
 		await newMongoMerchant.save();
 		res.status(201).json({
-			message: `User with id '${newMongoMerchant.uid}' was created successfully`,
+			
+			uid: newMongoMerchant.uid,
 			token,
 		});
 	} catch (err) {

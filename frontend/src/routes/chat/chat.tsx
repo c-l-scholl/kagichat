@@ -1,19 +1,20 @@
 import useAuth from "@/hooks/useAuthContext";
 import "./chat.styles.css";
-import { DisplayMessageType, MerchantType, MessageType } from "@/utils/types";
+import { DisplayMessageType, MessageType } from "@/utils/types";
 import ChatMessage from "@/components/chat-message";
 import { useState, useRef, useEffect } from "react";
 import useEncryption from "@/hooks/useEncryption";
 import useMessaging from "@/hooks/useMessaging";
+import { useParams } from "react-router-dom";
 
-const Chat = (props: { recieverMerchant: MerchantType }) => {
+const Chat = () => {
 	const { state } = useAuth();
 	const msgFetchTools = useMessaging();
 	const encTools = useEncryption();
 	const [safeMessages, setSafeMessages] = useState<MessageType[] | null>(null);
 	const [readMessages, setReadMessages] = useState<DisplayMessageType[] | null>(null);
-	// maybe have list of encrypted messages and list of decrypted messages
-	const [conversationId, setConversationId] = useState<string>("");
+	const [receiverUid, setRecieverUid] = useState<string>("");
+	const { conversationId } = useParams();
 	const [receiverPublicKey, setReceiverPublicKey] = useState<string>("");
 	const [formValue, setFormValue] = useState<string>("");
 
@@ -38,6 +39,48 @@ const Chat = (props: { recieverMerchant: MerchantType }) => {
 		const msgHash = encTools.createMsgHash(formValue);
 		const signature = encTools.getSignature(msgHash);
 
+		const response = await fetch("/api/messages/send", {
+			method: "POST",
+			headers: {
+				"Content-type": "application/json",
+			},
+			body: JSON.stringify({ 
+				senderId: uid,
+				recieverId: receiverUid,
+				conversationId: conversationId,
+				encryptedText: encryptedMessage,
+				signature: signature,
+			})
+		})
+
+		const sendRes = await response.json();
+
+		if (!response.ok) {
+			console.error(sendRes.error);
+		}
+
+		if (response.ok) {
+			// get Messages again
+			const getConversationMessages = async() => {
+				const verifiedConvoId = conversationId ?? "";
+				const conversation  = await msgFetchTools.getConversation(verifiedConvoId);
+				setSafeMessages(conversation ?? null);
+			}
+			getConversationMessages();
+			const preppedMessages = safeMessages?.map((msg) => {
+				const sharedSecret = encTools.deriveSharedSecret(receiverPublicKey);
+				const decryptedText = encTools.decryptMessage(msg.encryptedText, sharedSecret);
+				return {
+					_id: msg._id,
+					text: decryptedText,
+					senderUid: msg.senderUid,
+					createdAt: msg.createdAt
+				};
+			}) as DisplayMessageType[];
+			// need to verify messages somewhere in here
+			setReadMessages(preppedMessages);
+		}
+
 		setFormValue("");
 	};
 
@@ -49,24 +92,36 @@ const Chat = (props: { recieverMerchant: MerchantType }) => {
 	// get messages at start of chat
 	useEffect(() => {
 
-		// get receiver public key
-		const getReceiverPK = async (receiverUid: string) => {
-			const receiverPK = await encTools.getRecipientPublicKey(receiverUid);
-			setReceiverPublicKey(receiverPK);
-		}
-		getReceiverPK(props.recieverMerchant.uid);
+		// // get receiver public key
+		// const getReceiverPK = async (receiverUid: string) => {
+		// 	const receiverPK = await encTools.getRecipientPublicKey(receiverUid);
+		// 	setReceiverPublicKey(receiverPK);
+		// }
+		// getReceiverPK(props.recieverMerchant.uid);
 
-		// calculate conversation id
-		const [uid1, uid2] = [props.recieverMerchant.uid, state.authUser?.uid].sort();
-		const combined: string = `${uid1}-${uid2}`;
-		setConversationId(CryptoJS.SHA256(combined).toString());
+		// // calculate conversation id
+		// const [uid1, uid2] = [props.recieverMerchant.uid, state.authUser?.uid].sort();
+		// const combined: string = `${uid1}-${uid2}`;
+		// setConversationId(CryptoJS.SHA256(combined).toString());
 
 		// get messages from mongo
 		const getConversationMessages = async() => {
-			const conversation  = await msgFetchTools.getConversation(conversationId);
+			const verifiedConvoId = conversationId ?? "";
+			const conversation  = await msgFetchTools.getConversation(verifiedConvoId);
 			setSafeMessages(conversation ?? null);
 		}
 		getConversationMessages();
+
+		// get receiver publicKey
+		const getReceiverPublicKey = async () => {
+			if (!safeMessages) {
+				return;
+			}
+			setRecieverUid(safeMessages[0].receiverUid);
+			const receiverPK = await encTools.getRecipientPublicKey(receiverUid);
+			setReceiverPublicKey(receiverPK);
+		}
+		getReceiverPublicKey();	
 
 		// decrypt messages
 		
@@ -80,6 +135,7 @@ const Chat = (props: { recieverMerchant: MerchantType }) => {
 				createdAt: msg.createdAt
 			};
 		}) as DisplayMessageType[];
+		// need to verify messages somewhere in here
 		setReadMessages(preppedMessages);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps

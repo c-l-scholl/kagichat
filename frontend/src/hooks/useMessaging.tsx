@@ -16,7 +16,6 @@ const useMessaging = () => {
 			}
 		})
 	
-
 		const jsonRes = await response.json();
 
 		if (!response.ok) {

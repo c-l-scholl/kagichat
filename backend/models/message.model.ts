@@ -4,8 +4,8 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 interface IMessage extends Document {
   createdAt: Date;
   updatedAt: Date;
-  senderId: string;
-	receiverId: string,
+  senderUid: string;
+	receiverUid: string,
 	conversationId: string,
   encryptedText: string;
   //recipPublicKey: string;
@@ -19,12 +19,12 @@ interface IMessage extends Document {
 // }
 
 const messageSchema = new Schema<IMessage>({
-	senderId: {
+	senderUid: {
 		type: String,
 		required: true,
 		unique: true,
 	}, 
-	receiverId: {
+	receiverUid: {
 		type: String,
 		required: true,
 		unique: true,

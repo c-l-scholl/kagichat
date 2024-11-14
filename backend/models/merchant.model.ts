@@ -2,8 +2,6 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 import BadRequestError from "../middleware/errorTypes/BadRequestError.js";
 import * as argon2 from "argon2";
 import { v4 as uuidV4 } from "uuid";
-import elliptic from "elliptic";
-import CryptoJS from "crypto-js";
 
 // Define the document interface
 interface IMerchant extends Document {
@@ -16,7 +14,7 @@ interface IMerchant extends Document {
 }
 
 interface IMerchantModel extends Model<IMerchant> {
-	signup(merchantName: string, merchantPassword: string): Promise<IMerchant>;
+	signup(merchantName: string, merchantPassword: string, publicKey: string): Promise<IMerchant>;
 	login(merchantName: string, merchantPassword: string): Promise<IMerchant>;
 }
 
@@ -50,12 +48,14 @@ const merchantSchema = new Schema<IMerchant>(
 
 merchantSchema.statics.signup = async function (
 	merchantName: string,
-	merchantPassword: string
+	merchantPassword: string,
+	publicKey: string,
 ) {
 	const existingUser = await this.findOne({ merchantName });
+	console.log("this is my public key", publicKey);
 
 	// validation
-	if (!merchantName.trim() || !merchantPassword.trim()) {
+	if (!merchantName.trim() || !merchantPassword.trim() || !publicKey.trim()) {
 		throw new BadRequestError({
 			code: 400,
 			message: "All fields must be filled",
@@ -79,18 +79,13 @@ merchantSchema.statics.signup = async function (
 	// 3. parameters
 	// 4. salt
 	// 5. hashed password
-	const EC = elliptic.ec;
-	const ec = new EC("p256");
-	const keyPair = ec.genKeyPair();
-	const publicKey = keyPair.getPublic("hex");
-	const privateKey = keyPair.getPrivate("hex");
-	localStorage.setItem("privateKey", privateKey);
+	
 	const pwdHash = await argon2.hash(merchantPassword);
 	const newMerchant = await this.create({
 		merchantName,
 		hashedPwd: pwdHash,
 		uid: uuidV4(),
-		publicKey,
+		publicKey: publicKey,
 	});
 
 	return newMerchant;
@@ -98,8 +93,10 @@ merchantSchema.statics.signup = async function (
 
 merchantSchema.statics.login = async function (
 	merchantName: string,
-	merchantPassword: string
+	merchantPassword: string,
 ) {
+	// login needs to re-derive the private key
+
 	if (!merchantName.trim() || !merchantPassword.trim()) {
 		throw new BadRequestError({
 			code: 400,
