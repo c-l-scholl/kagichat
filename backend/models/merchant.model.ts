@@ -52,7 +52,6 @@ merchantSchema.statics.signup = async function (
 	publicKey: string,
 ) {
 	const existingUser = await this.findOne({ merchantName });
-	console.log("this is my public key", publicKey);
 
 	// validation
 	if (!merchantName.trim() || !merchantPassword.trim() || !publicKey.trim()) {
@@ -63,7 +62,6 @@ merchantSchema.statics.signup = async function (
 	}
 
 	// normally would add validator checks for email and strong password
-
 	// if (!validator.isStrongPassword(merchantPassword))
 
 	if (existingUser) {
@@ -72,15 +70,9 @@ merchantSchema.statics.signup = async function (
 			message: "Username already exists",
 		});
 	}
-
-	// this returns 5 separate pieces separated by $
-	// 1. type of argon used
-	// 2. version
-	// 3. parameters
-	// 4. salt
-	// 5. hashed password
 	
-	const pwdHash = await argon2.hash(merchantPassword);
+	// const pwdHash = await argon2.hash(merchantPassword);
+	const pwdHash = merchantPassword; // hashed on the front end now
 	const newMerchant = await this.create({
 		merchantName,
 		hashedPwd: pwdHash,

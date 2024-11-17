@@ -1,22 +1,22 @@
 import { useState } from "react";
 import useAuthContext from "@/hooks/useAuthContext";
 import { AuthActionKind } from "@/utils/types";
-import useEncryption from "./useEncryptionContext";
+// import useEncryption from "./useEncryptionContext";
+import useDerive from "./useDerive";
 
 const useSignup = () => {
 	const [signupError, setSignupError] = useState(null);
 	const [isSignupLoading, setisSignupLoading] = useState<boolean>(false);
 	const { dispatch } = useAuthContext();
-	const { ec } = useEncryption();
-
+	// const { ec } = useEncryption();
+	const deriveTools = useDerive();
+ 
 	const signup = async (merchantName: string, merchantPassword: string) => {
 		setisSignupLoading(true);
 		setSignupError(null);
 
-		
-		const keyPair = ec.genKeyPair();
-		const publicKey = keyPair.getPublic("hex");
-		const privateKey = keyPair.getPrivate("hex");
+		const { publicKey, privateKey } = await deriveTools.genKeyPairFromPlain(merchantPassword);
+
 		// console.log(publicKey);
 
 		const response = await fetch("/api/merchants/signup", {
@@ -24,7 +24,7 @@ const useSignup = () => {
 			headers: {
 				"Content-type": "application/json",
 			},
-			body: JSON.stringify({ merchantName, merchantPassword, publicKey }),
+			body: JSON.stringify({ merchantName, hashedPwd, publicKey }),
 		});
 
 		const jsonRes = await response.json();

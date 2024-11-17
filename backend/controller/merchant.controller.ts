@@ -113,20 +113,10 @@ const signUpNewMerchant = async (
 
 		const token: string = createToken(signupMerchant.uid);
 
-		// const newMerchant: MerchantType = {
-		// 	merchantName: signupMerchant.merchantName,
-		// 	hashedPwd: signupMerchant.hashedPwd,
-		// 	uid: signupMerchant.uid,
-		// 	publicKey: signupMerchant.publicKey, // TODO: generate public key
-		// };
-
-		// TODO: GENERATE PRIVATE KEY
-
 		const newMongoMerchant = new Merchant(signupMerchant);
 
 		await newMongoMerchant.save();
 		res.status(201).json({
-			
 			uid: newMongoMerchant.uid,
 			token,
 		});
@@ -157,6 +147,7 @@ const loginMerchant = async (
 		res.status(200).json({
 			uid: merchantToLogin.uid,
 			token,
+			hashedPwd: merchantToLogin.hashedPwd
 		});
 	} catch (err) {
 		console.error("Error querying data:", err);
