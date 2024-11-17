@@ -1,19 +1,19 @@
 import { useState } from "react";
 import useAuthContext from "@/hooks/useAuthContext";
 import { AuthActionKind } from "@/utils/types";
-import elliptic from "elliptic";
+import useEncryption from "./useEncryptionContext";
 
 const useSignup = () => {
 	const [signupError, setSignupError] = useState(null);
 	const [isSignupLoading, setisSignupLoading] = useState<boolean>(false);
 	const { dispatch } = useAuthContext();
+	const { ec } = useEncryption();
 
 	const signup = async (merchantName: string, merchantPassword: string) => {
 		setisSignupLoading(true);
 		setSignupError(null);
 
-		const EC = elliptic.ec;
-		const ec = new EC("p256");
+		
 		const keyPair = ec.genKeyPair();
 		const publicKey = keyPair.getPublic("hex");
 		const privateKey = keyPair.getPrivate("hex");

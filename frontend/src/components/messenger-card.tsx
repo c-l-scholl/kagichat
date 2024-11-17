@@ -1,6 +1,6 @@
-import useAuth from "@/hooks/useAuthContext";
+// import useAuth from "@/hooks/useAuthContext";
 import { Card, Heading } from "@chakra-ui/react";
-import CryptoJS from "crypto-js";
+// import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 
 type MessengerCardProps = {
@@ -9,7 +9,7 @@ type MessengerCardProps = {
 	merchantUid: string;
 }
 const MessengerCard = ({ merchantName, dateCreated, merchantUid }: MessengerCardProps) => {
-	const { state } = useAuth();
+	// const { state } = useAuth();
 	const navigate = useNavigate();
 	const merchantCreatedDate = new Date(dateCreated);
 	const formatDate = (date: Date): string => {
@@ -20,10 +20,10 @@ const MessengerCard = ({ merchantName, dateCreated, merchantUid }: MessengerCard
 	const strMerchantCreatedDate: string = formatDate(merchantCreatedDate)
 
 	const handleSelectMessenger = () => {
-		const [id1, id2] = [merchantUid, state.authUser?.uid].sort();
-		const conversationId = CryptoJS.SHA256(`${id1}-${id2}`).toString();
-		console.log(conversationId);
-		navigate(`/${conversationId}`);
+		// const [id1, id2] = [merchantUid, state.authUser?.uid].sort();
+		// const conversationId = CryptoJS.SHA256(`${id1}-${id2}`).toString();
+		// console.log(conversationId);
+		navigate(`/${merchantUid}`);
 	}
 
 	return (

@@ -4,8 +4,13 @@ import { useState } from "react";
 const useMessaging = () => {
 	const [isMessagesLoading, setIsMessagesLoading] = useState<boolean>(false);
 	const [messsageError, setMessageError] = useState(null);
+	// const [encryptedMessages, setEncryptedMessages] = useState<MessageType[] | null>(null);
 
-	const getConversation = async (conversationId: string) => {
+	const getConversation = async (conversationId: string): Promise<MessageType[]> => {
+		if (!conversationId) {
+			console.log("cannot fetch messages message because conversationId is null");
+			return [];
+		}
 		setIsMessagesLoading(true);
 		setMessageError(null);
 
@@ -21,13 +26,14 @@ const useMessaging = () => {
 		if (!response.ok) {
 			setIsMessagesLoading(false);
 			setMessageError(jsonRes.error);
+			return [];
 		}
 
-		if (response.ok) {
-			setIsMessagesLoading(false);
-			const encryptedMessages = jsonRes as MessageType[];
-			return encryptedMessages;
-		}
+		setIsMessagesLoading(false);
+		const encryptedMessages = jsonRes as MessageType[];
+		console.log("messages:", encryptedMessages);
+
+		return encryptedMessages;
 
 	}
 

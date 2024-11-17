@@ -2,6 +2,7 @@ import MessengerCard from "@/components/messenger-card";
 import useAuth from "@/hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import { MerchantType } from "@/utils/types";
+import LogoutButton from "@/components/logout-button";
 
 
 const MessengersPage = () => {
@@ -14,7 +15,6 @@ const MessengersPage = () => {
 			const res = await fetch("/api/merchants");
 			const data = (await res.json()) as MerchantType[];
 			const merchantData = data.filter((merchant) => merchant.uid !== state.authUser?.uid)
-			console.log(merchantData);
 			setMerchants(merchantData);
 		};
 		getMerchants();
@@ -25,6 +25,7 @@ const MessengersPage = () => {
 		<div className="page-container">
 			<header>
 				<h1>Chats</h1>
+				<LogoutButton />
 			</header>
 			<div className="messengers-container">
 				{merchants &&

@@ -22,28 +22,20 @@ const messageSchema = new Schema<IMessage>({
 	senderUid: {
 		type: String,
 		required: true,
-		unique: true,
 	}, 
 	receiverUid: {
 		type: String,
 		required: true,
-		unique: true,
 	}, 
 	conversationId: {
 		type: String,
 		required: true,
-		unique: true,
 	}, 
 	encryptedText: {
 		type: String,
 		required: true,
 		unique: true,
 	},
-	// recipPublicKey: {
-	// 	type: String,
-	// 	required: true,
-	// 	unique: true,
-	// },
 	signature: {
 		type: Buffer,
 		required: true,

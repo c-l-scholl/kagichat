@@ -33,7 +33,7 @@ const router = createBrowserRouter(
 			/>
 
 			<Route
-				path="/:conversationId"
+				path="/:receiverUid"
 				element={
 					<ProtectedRoute>
 						<ChatPage />
