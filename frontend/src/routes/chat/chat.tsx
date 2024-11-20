@@ -100,7 +100,7 @@ const Chat = () => {
 
 	useEffect(() => {
 		dummy.current?.scrollIntoView({ behavior: "smooth" });
-	}, [readMessages, safeMessages]);
+	}, [readMessages, safeMessages, setReadMessages]);
 
 
 	// get messages at start of chat

@@ -81,12 +81,22 @@ const useKeys = () => {
 	};
 
 	const createMsgHash = (message: string): elliptic.BNInput => {
-		return ec.hash().update(message).digest();
+		const salt = CryptoJS.lib.WordArray.random(16).toString();
+		return ec.hash().update(message + salt).digest();
 	}
 
 	const getSignature = (msgHash: elliptic.BNInput): number[] => {
 		const keyPair = ec.keyFromPrivate(myPrivateKey);
 		return keyPair.sign(msgHash).toDER();
+	}
+
+	// add verify signature method, make more effiecient
+
+	const verifySignature = async (signature: number[], recUid: string, hash: string): Promise<boolean> => {
+		const recPK = await getRecipientPublicKey(recUid);
+		const key = ec.keyFromPrivate(recPK);
+		const isMsgValid = key.verify(hash, signature);
+		return isMsgValid;
 	}
 
 
