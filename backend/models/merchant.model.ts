@@ -71,10 +71,9 @@ merchantSchema.statics.signup = async function (
 		});
 	}
 	
-	// const pwdHash = await argon2.hash(merchantPassword);
-	const pwdHash = merchantPassword; // hashed on the front end now
+	const pwdHash = await argon2.hash(merchantPassword);
 	const newMerchant = await this.create({
-		merchantName,
+		merchantName: merchantName.trim(),
 		hashedPwd: pwdHash,
 		uid: uuidV4(),
 		publicKey: publicKey,
@@ -96,7 +95,7 @@ merchantSchema.statics.login = async function (
 		});
 	}
 
-	const merchant = await this.findOne({ merchantName });
+	const merchant = await this.findOne({ merchantName: merchantName.trim() });
 
 	if (!merchant) {
 		throw new BadRequestError({

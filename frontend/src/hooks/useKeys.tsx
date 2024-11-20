@@ -18,9 +18,10 @@ const useKeys = () => {
 		setMyPrivateKey(privateKey);
 
 		const res = await fetch(`/api/merchants/${uid}`);
-		const data = (await res.json());
+		const data = (await res.json()) as MerchantType;
 		// console.log(data);
-		setMyPublicKey(data);
+		setMyPublicKey(data.publicKey);
+		return { privateKey: privateKey, publicKey: data.publicKey };
 	};
 
 	const getRecipientPublicKey = async (recipientUid: string): Promise<string> => {
@@ -29,26 +30,45 @@ const useKeys = () => {
 		return merchant.publicKey;
 	};
 
-	const deriveSharedSecret = async (recipientUid: string) => {
-		const res = await fetch(`/api/merchants/${recipientUid}`);
-		const merchant = await res.json() as MerchantType;
-		// return merchant.publicKey;
-		const recipientKey = ec.keyFromPublic(merchant.publicKey, "hex");
-		if (!recipientKey) {
-			console.log("No recipient key found while trying DH");
+	const deriveSharedSecret = async (myUid: string, recipientUid: string) => {
+		try {	
+			const { privateKey } = await gatherMyKeys(myUid);
+
+			const res = await fetch(`/api/merchants/${recipientUid}`);
+			const merchant = await res.json() as MerchantType;
+			
+			if (!merchant || !merchant.publicKey) {
+				throw new Error("Recipient public key not found");
+			}
+			const recipientKey = ec.keyFromPublic(merchant.publicKey, "hex");
+			if (!recipientKey.validate()) {
+				throw new Error("No recipient key found while trying DH");
+			}
+			const myKeyPair = ec.keyFromPrivate(privateKey);
+			if (!myKeyPair) {
+				throw new Error("No sender key found while trying DH");
+			}
+
+			if (!privateKey) {
+				throw new Error("cannot find my private key");
+			}
+
+			const derivableRecipPublicKey = recipientKey.getPublic();
+			if (!derivableRecipPublicKey) {
+				throw new Error("cannot derive recipient public key");
+			}
+			
+			const sharedSecret = myKeyPair
+				.derive(derivableRecipPublicKey)
+				.toString(16);
+			if (!sharedSecret) {
+				throw new Error("unable to derive shared secret")
+			}
+			return sharedSecret; // This is used as the AES key
+		} catch (err) {
+			console.error("error deriving shared secret", err);
+			throw err;
 		}
-		const myKeyPair = ec.keyFromPrivate(myPrivateKey);
-		if (!myKeyPair) {
-			console.log("No sender key found while trying DH");
-		}
-		
-		const sharedSecret = myKeyPair
-			.derive(recipientKey.getPublic())
-			.toString(16);
-		if (!sharedSecret) {
-			console.log("unable to derive shared secret")
-		}
-		return sharedSecret; // This is used as the AES key
 	};
 
 	const encryptMessage = (msg: string, secret: string): string => {

@@ -8,7 +8,7 @@ const useMessaging = () => {
 
 	const getConversation = async (conversationId: string): Promise<MessageType[]> => {
 		if (!conversationId) {
-			console.log("cannot fetch messages message because conversationId is null");
+			console.log("cannot fetch messages because conversationId is null");
 			return [];
 		}
 		setIsMessagesLoading(true);

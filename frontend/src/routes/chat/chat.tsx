@@ -35,7 +35,12 @@ const Chat = () => {
 			console.log("no auth user");
 			return;
 		}
-		const sharedSecret = await encTools.deriveSharedSecret(receiverUid ?? "");
+
+		if (!receiverUid) {
+			console.log("no receiver uid");
+			return;
+		}
+		const sharedSecret = await encTools.deriveSharedSecret(state.authUser.uid, receiverUid);
 		const encryptedMessage = encTools.encryptMessage(formValue, sharedSecret);
 
 		const msgHash = encTools.createMsgHash(formValue);
@@ -70,7 +75,11 @@ const Chat = () => {
 					console.log("no recieverUid found");
 					return;
 				}
-				const sharedSecret = await encTools.deriveSharedSecret(receiverUid);
+				if (!state.authUser) {
+					console.log("no auth user");
+					return;
+				}
+				const sharedSecret = await encTools.deriveSharedSecret(state.authUser.uid, receiverUid);
 				const preppedMessages = safeMessages?.map((msg) => {
 					const decryptedText = encTools.decryptMessage(msg.encryptedText, sharedSecret);
 					return {
@@ -98,7 +107,6 @@ const Chat = () => {
 	useEffect(() => {
 
 		const prepConversation = async () => {
-			await encTools.gatherMyKeys(state.authUser?.uid ?? "");
 
 			const [id1, id2] = [receiverUid, state.authUser?.uid].sort();
 			const combined: string = `${id1}-${id2}`;
@@ -122,7 +130,11 @@ const Chat = () => {
 				return;
 			}
 
-			const sharedSecret = await encTools.deriveSharedSecret(receiverUid);
+			if (!state.authUser) {
+				console.log("no current uid");
+				return;
+			}
+			const sharedSecret = await encTools.deriveSharedSecret(state.authUser.uid, receiverUid);
 			
 			const preppedMessages = conversation?.map((msg) => {
 			
@@ -154,6 +166,7 @@ const Chat = () => {
 	return (
 		<div className="chat-room">
 			<div className="message-container">
+				{msgFetchTools.isMessagesLoading && <span>Loading... </span>}
 				{readMessages &&
 					readMessages.map((msg) => <ChatMessage key={msg._id} message={msg} />)}
 				<div ref={dummy}></div>
