@@ -1,9 +1,11 @@
-import { MessageType } from "@/utils/types";
+import { DisplayMessageType, MessageType } from "@/utils/types";
 import { useState } from "react";
+import useKeys from "./useKeys";
 
 const useMessaging = () => {
 	const [isMessagesLoading, setIsMessagesLoading] = useState<boolean>(false);
 	const [messsageError, setMessageError] = useState(null);
+	const encTools = useKeys();
 
 	const getConversation = async (conversationId: string): Promise<MessageType[]> => {
 		if (!conversationId) {
@@ -30,13 +32,26 @@ const useMessaging = () => {
 
 		setIsMessagesLoading(false);
 		const encryptedMessages = jsonRes as MessageType[];
-		console.log("messages:", encryptedMessages);
 
-		return encryptedMessages;
+		return encryptedMessages ?? [];
 
 	}
 
-	return { getConversation, isMessagesLoading, messsageError };
+	const preppedMessagesForDisplay = (conversation: MessageType[], sharedSecret: string) => {
+		const preppedMessages = conversation?.map((msg) => {
+			
+			const decryptedText = encTools.decryptMessage(msg.encryptedText, sharedSecret);
+			return {
+				_id: msg._id,
+				text: decryptedText,
+				senderUid: msg.senderUid,
+				createdAt: msg.createdAt
+			};
+		}) as DisplayMessageType[];
+		return preppedMessages;
+	}
+
+	return { getConversation, preppedMessagesForDisplay, isMessagesLoading, messsageError };
 }
 
 export default useMessaging;

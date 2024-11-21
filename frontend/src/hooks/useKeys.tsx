@@ -30,28 +30,36 @@ const useKeys = () => {
 		return merchant.publicKey;
 	};
 
-	const deriveSharedSecret = async (myUid: string, recipientUid: string) => {
+	const deriveSharedSecret = async (recipientUid: string) => {
 		try {	
-			const { privateKey } = await gatherMyKeys(myUid);
+			
+			const privateKey = localStorage.getItem("privateKey") ?? "";
+			if (!privateKey) {
+				throw new Error("cannot find my private key");
+			}
+			setMyPrivateKey(privateKey);
 
+			if (!recipientUid) {
+				throw new Error("recipientUid is bad");
+			}
 			const res = await fetch(`/api/merchants/${recipientUid}`);
 			const merchant = await res.json() as MerchantType;
 			
 			if (!merchant || !merchant.publicKey) {
 				throw new Error("Recipient public key not found");
 			}
+
 			const recipientKey = ec.keyFromPublic(merchant.publicKey, "hex");
 			if (!recipientKey.validate()) {
 				throw new Error("No recipient key found while trying DH");
 			}
+
 			const myKeyPair = ec.keyFromPrivate(privateKey);
 			if (!myKeyPair) {
 				throw new Error("No sender key found while trying DH");
 			}
 
-			if (!privateKey) {
-				throw new Error("cannot find my private key");
-			}
+			
 
 			const derivableRecipPublicKey = recipientKey.getPublic();
 			if (!derivableRecipPublicKey) {
@@ -92,12 +100,12 @@ const useKeys = () => {
 
 	// add verify signature method, make more effiecient
 
-	const verifySignature = async (signature: number[], recUid: string, hash: string): Promise<boolean> => {
-		const recPK = await getRecipientPublicKey(recUid);
-		const key = ec.keyFromPrivate(recPK);
-		const isMsgValid = key.verify(hash, signature);
-		return isMsgValid;
-	}
+	// const verifySignature = async (signature: number[], recUid: string, hash: string): Promise<boolean> => {
+	// 	const recPK = await getRecipientPublicKey(recUid);
+	// 	const key = ec.keyFromPrivate(recPK);
+	// 	const isMsgValid = key.verify(hash, signature);
+	// 	return isMsgValid;
+	// }
 
 
 	return {
