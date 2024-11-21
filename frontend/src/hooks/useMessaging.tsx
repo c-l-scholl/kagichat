@@ -4,7 +4,6 @@ import { useState } from "react";
 const useMessaging = () => {
 	const [isMessagesLoading, setIsMessagesLoading] = useState<boolean>(false);
 	const [messsageError, setMessageError] = useState(null);
-	// const [encryptedMessages, setEncryptedMessages] = useState<MessageType[] | null>(null);
 
 	const getConversation = async (conversationId: string): Promise<MessageType[]> => {
 		if (!conversationId) {

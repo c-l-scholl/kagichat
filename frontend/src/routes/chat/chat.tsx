@@ -9,16 +9,20 @@ import { useParams } from "react-router-dom";
 import CryptoJS from "crypto-js";
 
 const Chat = () => {
+
+	// hooks
 	const { state } = useAuth();
 	const msgFetchTools = useMessaging();
 	const encTools = useKeys();
+
+	// state variables
 	const [safeMessages, setSafeMessages] = useState<MessageType[] | null>(null);
 	const [readMessages, setReadMessages] = useState<DisplayMessageType[] | null>(null);
-	// const [receiverUid, setRecieverUid] = useState<string>("");
-	const { receiverUid } = useParams();
 	const [conversationId, setConversationId] = useState<string>("");
-	// const [receiverPublicKey, setReceiverPublicKey] = useState<string>("");
 	const [formValue, setFormValue] = useState<string>("");
+
+	// params
+	const { receiverUid } = useParams();
 
 	const dummy = useRef<HTMLDivElement | null>(null);
 
@@ -108,23 +112,20 @@ const Chat = () => {
 
 		const prepConversation = async () => {
 
+			// get conversationId
 			const [id1, id2] = [receiverUid, state.authUser?.uid].sort();
 			const combined: string = `${id1}-${id2}`;
 			const hashedConversationId = CryptoJS.SHA256(combined).toString();
 			console.log("conversationId", hashedConversationId);
 			setConversationId(hashedConversationId);
-
 			
+			// get encrypted messages
 			const conversation = await msgFetchTools.getConversation(hashedConversationId);
 			if (!conversation) {
 				console.log("no messages between these two users");
 			}
 			setSafeMessages(conversation);
 
-			// if (safeMessages == null) {
-			// 	console.log("safe messages is null");
-			// 	return;
-			// }
 			if (!receiverUid) {
 				console.log("no recieverUid in preppedMessages");
 				return;
@@ -134,8 +135,11 @@ const Chat = () => {
 				console.log("no current uid");
 				return;
 			}
+			
+			// shared secret
 			const sharedSecret = await encTools.deriveSharedSecret(state.authUser.uid, receiverUid);
 			
+			// decrypt messages for display
 			const preppedMessages = conversation?.map((msg) => {
 			
 				const decryptedText = encTools.decryptMessage(msg.encryptedText, sharedSecret);
