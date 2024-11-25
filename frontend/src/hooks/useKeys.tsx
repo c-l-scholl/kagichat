@@ -3,9 +3,13 @@ import CryptoJS from "crypto-js";
 import { useState } from "react";
 import useEncryption from "./useEncryptionContext";
 import { MerchantType } from "@/utils/types";
+import useAuth from "./useAuthContext";
+import useCookie from "./useCookie";
 
 const useKeys = () => {
 	const { ec } = useEncryption();
+	const { state } = useAuth(); 
+	const { getCookie } = useCookie();
 
 	const [myPublicKey, setMyPublicKey] = useState<string>("");
 	const [myPrivateKey, setMyPrivateKey] = useState<string>("");
@@ -33,7 +37,11 @@ const useKeys = () => {
 	const deriveSharedSecret = async (recipientUid: string) => {
 		try {	
 			
-			const privateKey = localStorage.getItem("privateKey") ?? "";
+			//const privateKey = localStorage.getItem("privateKey") ?? "";
+			if (!state.authUser) {
+				throw new Error("user is not authorized to access private key");
+			}
+			const privateKey = getCookie(state.authUser.uid);
 			if (!privateKey) {
 				throw new Error("cannot find my private key");
 			}

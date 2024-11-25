@@ -3,24 +3,23 @@ import useAuthContext from "@/hooks/useAuthContext";
 import { AuthActionKind } from "@/utils/types";
 import useEncryption from "./useEncryptionContext";
 // import useDerive from "./useDerive";
+import useCookie from "./useCookie";
 
 const useSignup = () => {
 	const [signupError, setSignupError] = useState(null);
 	const [isSignupLoading, setisSignupLoading] = useState<boolean>(false);
 	const { dispatch } = useAuthContext();
 	const { ec } = useEncryption();
+	const { setCookie, getCookie } = useCookie();
 	// const deriveTools = useDerive();
  
 	const signup = async (merchantName: string, merchantPassword: string) => {
 		setisSignupLoading(true);
 		setSignupError(null);
 
-		// const { publicKey, privateKey } = await deriveTools.genKeyPairFromPlain(merchantPassword);
 		const keyPair = ec.genKeyPair();
 		const publicKey = keyPair.getPublic("hex");
 		const privateKey = keyPair.getPrivate("hex");
-
-		// console.log(publicKey);
 
 		const response = await fetch("/api/merchants/signup", {
 			method: "POST",
@@ -42,7 +41,10 @@ const useSignup = () => {
 			localStorage.setItem("merchant", JSON.stringify(jsonRes));
 
 			// need to encrypt this later or make it part of the json token
-			localStorage.setItem("privateKey", privateKey);
+			// localStorage.setItem("privateKey", privateKey);
+			setCookie(jsonRes.uid, privateKey, 100);
+			console.log(getCookie(jsonRes.uid));
+			
 
 			// update auth context
 			dispatch({ type: AuthActionKind.LOGIN, payload: jsonRes });

@@ -41,6 +41,7 @@ const useLogin = () => {
 			// derive private key from password
 			// const privateKey = await deriveTools.getPrivateKeyFromHash(jsonRes.pwd);
 			//localStorage.setItem("privateKey", privateKey);
+			
 
 			// update auth context
 			dispatch({ type: AuthActionKind.LOGIN, payload: jsonRes });
