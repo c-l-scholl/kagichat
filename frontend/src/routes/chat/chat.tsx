@@ -119,7 +119,7 @@ const Chat = () => {
 			// need to verify messages somewhere in here
 			setReadMessages(preppedMessages);
 
-			console.log(preppedMessages);
+			// console.log(preppedMessages);
 		};
 		prepConversation();
 		// eslint-disable-next-line react-hooks/exhaustive-deps

@@ -15,12 +15,13 @@ const useCookie = () => {
 	const getCookie = (cName: string): string => {
 		const cDecoded = decodeURIComponent(document.cookie);
 		const cArray = cDecoded.split("; ");
+		let result: string = "";
 		cArray.forEach((element) => {
 			if (element.indexOf(cName) == 0) {
-				return element.substring(cName.length + 1);
+				result =  element.substring(cName.length + 1);
 			}
 		})
-		return "";
+		return result;
 	}
 
 	return {

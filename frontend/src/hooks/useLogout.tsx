@@ -5,8 +5,7 @@ const useLogout = () => {
 
 	const logout = () => {
 		// remove token from storage
-		// localStorage.removeItem("merchant");
-		// localStorage.removeItem("privateKey");
+		localStorage.removeItem("merchant");
 
 		// remove from context
 		dispatch({ type: AuthActionKind.LOGOUT, payload: null });
