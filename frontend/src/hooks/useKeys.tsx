@@ -1,4 +1,3 @@
-import elliptic from "elliptic";
 import CryptoJS from "crypto-js";
 import { useState } from "react";
 import useEncryption from "./useEncryptionContext";
@@ -96,15 +95,11 @@ const useKeys = () => {
 		return msgAsBytes.toString(CryptoJS.enc.Utf8);
 	};
 
-	const createMsgHash = (message: string): elliptic.BNInput => {
-		const salt = CryptoJS.lib.WordArray.random(16).toString();
-		return ec.hash().update(message + salt).digest();
-	}
+	// const createMsgHash = (message: string): elliptic.BNInput => {
+	// 	const salt = CryptoJS.lib.WordArray.random(16).toString();
+	// 	return ec.hash().update(message + salt).digest();
+	// }
 
-	const getSignature = (msgHash: elliptic.BNInput): number[] => {
-		const keyPair = ec.keyFromPrivate(myPrivateKey);
-		return keyPair.sign(msgHash).toDER();
-	}
 
 	// add verify signature method, make more effiecient
 
@@ -124,8 +119,7 @@ const useKeys = () => {
 		deriveSharedSecret,
 		encryptMessage,
 		decryptMessage,
-		createMsgHash,
-		getSignature
+		// createMsgHash,
 	};
 };
 

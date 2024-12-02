@@ -13,7 +13,7 @@ interface EncryptionContextProviderProps {
 
 const EncryptionContextProvider = ({ children }: EncryptionContextProviderProps) => {
 	
-	const ec = new EC("p256");
+	const ec = new EC("curve25519");
 	return (
 		<EncryptionContext.Provider value={{ ec }}>
 			{children}

@@ -9,7 +9,7 @@ interface IMessage extends Document {
 	conversationId: string,
   encryptedText: string;
   //recipPublicKey: string;
-	signature: Buffer;
+	// signature: Buffer;
 }
 
 
@@ -36,11 +36,11 @@ const messageSchema = new Schema<IMessage>({
 		required: true,
 		unique: true,
 	},
-	signature: {
-		type: Buffer,
-		required: true,
-		unique: true
-	},
+	// signature: {
+	// 	type: Buffer,
+	// 	required: true,
+	// 	unique: true
+	// },
 }, {
 	timestamps: true
 });

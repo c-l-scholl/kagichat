@@ -18,10 +18,7 @@ const Chat = () => {
 	const encTools = useKeys();
 
 	// state variables
-	// const [safeMessages, setSafeMessages] = useState<MessageType[] | null>(null);
-	const [readMessages, setReadMessages] = useState<DisplayMessageType[] | null>(
-		null
-	);
+	const [readMessages, setReadMessages] = useState<DisplayMessageType[] | null>(null);
 	const [conversationId, setConversationId] = useState<string>("");
 	const [formValue, setFormValue] = useState<string>("");
 
@@ -36,8 +33,6 @@ const Chat = () => {
 		const uid = state.authUser?.uid;
 		const sharedSecret = await encTools.deriveSharedSecret(receiverUid ?? "");
 		const encryptedMessage = encTools.encryptMessage(formValue, sharedSecret);
-		const msgHash = encTools.createMsgHash(formValue);
-		const signature = encTools.getSignature(msgHash);
 
 		const response = await fetch("/api/messages/send", {
 			method: "POST",
@@ -49,7 +44,6 @@ const Chat = () => {
 				receiverId: receiverUid,
 				conversationId: conversationId,
 				encryptedText: encryptedMessage,
-				signature: signature,
 			}),
 		});
 
@@ -66,19 +60,19 @@ const Chat = () => {
 				const conversation = await msgFetchTools.getConversation(
 					conversationId
 				);
-				// setSafeMessages(conversation);
+
 				// shared secret
 				const sharedSecret = await encTools.deriveSharedSecret(
 					receiverUid ?? ""
 				);
+
 				// set messages for display and decrypt
 				const preppedMessages = msgFetchTools.preppedMessagesForDisplay(
 					conversation,
 					sharedSecret
 				);
-				// need to verify messages somewhere in here
+
 				setReadMessages(preppedMessages);
-				// need to verify messages somewhere in here
 			};
 			getConversationMessages();
 		}
@@ -108,15 +102,15 @@ const Chat = () => {
 			const conversation = await msgFetchTools.getConversation(
 				hashedConversationId
 			);
-			// setSafeMessages(conversation);
+
 			// shared secret
 			const sharedSecret = await encTools.deriveSharedSecret(receiverUid ?? "");
+				
 			// set messages for display and decrypt
 			const preppedMessages = msgFetchTools.preppedMessagesForDisplay(
 				conversation,
 				sharedSecret
 			);
-			// need to verify messages somewhere in here
 			setReadMessages(preppedMessages);
 
 			// console.log(preppedMessages);
@@ -167,14 +161,18 @@ const Chat = () => {
 
 	return (
 		<div className="chat-room">
-			<div className="message-container">
-				{ /* msgFetchTools.isMessagesLoading && <span>Loading... </span> */}
+			{/* <div className="message-container">
 				{readMessages &&
 					readMessages.map((msg) => (
 						<ChatMessage key={msg._id} message={msg} />
 					))}
 				<div ref={dummy}></div>
-			</div>
+			</div> */}
+			{readMessages &&
+					readMessages.map((msg) => (
+						<ChatMessage key={msg._id} message={msg} />
+					))}
+				<div ref={dummy}></div>
 
 			<form onSubmit={sendMessage}>
 				<input

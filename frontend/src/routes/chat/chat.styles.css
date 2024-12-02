@@ -2,7 +2,7 @@
   padding: 10px;
   height: 80vh;
   margin: 10vh 0 10vh;
-  overflow-y: scroll;
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -17,6 +17,10 @@
 
 .message-container::-webkit-scrollbar-thumb {
   background: #6649b8;
+}
+
+.chat-room {
+  padding-top: 1rem;
 }
 
 .chat-room form {

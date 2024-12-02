@@ -25,16 +25,12 @@ const getMessages = async (req: Request, res: Response, next: NextFunction) => {
 const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const userInput = req.body;
-		// get all parameters:
-		// senderId, recipientId, conversationId, encryptedText, signature
-		// frontend will calculate conversationId (sort uids, append with "-", hash?)
 
 		if (
 			!userInput.senderId ||
 			!userInput.receiverId ||
 			!userInput.conversationId ||
-			!userInput.encryptedText ||
-			!userInput.signature
+			!userInput.encryptedText 
 		) {
 			throw new BadRequestError({
 				code: 400,
@@ -47,7 +43,6 @@ const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
 			receiverUid: userInput.receiverId,
 			conversationId: userInput.conversationId,
 			encryptedText: userInput.encryptedText,
-			signature: userInput.signature,
 		});
 
 		await newMessage.save();
