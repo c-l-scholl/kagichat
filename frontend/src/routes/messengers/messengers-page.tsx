@@ -3,6 +3,7 @@ import useAuth from "@/hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import { MerchantType } from "@/utils/types";
 import LogoutButton from "@/components/logout-button";
+import "./messengers.styles.css";
 
 
 const MessengersPage = () => {
@@ -23,7 +24,7 @@ const MessengersPage = () => {
 
 	return (
 		<div className="page-container">
-			<header>
+			<header className="messengers-header">
 				<h1>Chats</h1>
 				<LogoutButton />
 			</header>
