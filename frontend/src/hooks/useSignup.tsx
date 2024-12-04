@@ -2,8 +2,8 @@ import { useState } from "react";
 import useAuthContext from "@/hooks/useAuthContext";
 import { AuthActionKind } from "@/utils/types";
 import useEncryption from "./useEncryptionContext";
-// import useDerive from "./useDerive";
 import useCookie from "./useCookie";
+// import CryptoJS from "crypto-js";
 
 const useSignup = () => {
 	const [signupError, setSignupError] = useState(null);
@@ -11,7 +11,6 @@ const useSignup = () => {
 	const { dispatch } = useAuthContext();
 	const { ec } = useEncryption();
 	const { setCookie, getCookie } = useCookie();
-	// const deriveTools = useDerive();
  
 	const signup = async (merchantName: string, merchantPassword: string) => {
 		setisSignupLoading(true);
@@ -40,12 +39,11 @@ const useSignup = () => {
 			// save current merchant (user)
 			localStorage.setItem("merchant", JSON.stringify(jsonRes));
 
-			// need to encrypt this later or make it part of the json token
-			// localStorage.setItem("privateKey", privateKey);
+			// need to encrypt this later 
+			// const encPrivateKey = CryptoJS.AES.encrypt(privateKey, )
 			setCookie(jsonRes.uid, privateKey, 100);
 			console.log(getCookie(jsonRes.uid));
 			
-
 			// update auth context
 			dispatch({ type: AuthActionKind.LOGIN, payload: jsonRes });
 

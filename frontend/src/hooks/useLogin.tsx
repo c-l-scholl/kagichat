@@ -30,12 +30,7 @@ const useLogin = () => {
 		}
 
 		if (response.ok) {
-
-			// const { privateKey } = await deriveTools.genKeyPairFromPlain(merchantPassword);
-			// const merchantInfo = JSON.stringify(jsonRes);
-			// const [ uid, token ] = merchantInfo.split(",", 2);
-			// // save current merchant (user)
-			// localStorage.setItem("merchant", `${uid},${token}`);
+			
 			localStorage.setItem("merchant", JSON.stringify(jsonRes));
 
 			// derive private key from password
