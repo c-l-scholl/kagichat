@@ -147,7 +147,6 @@ const loginMerchant = async (
 		res.status(200).json({
 			uid: merchantToLogin.uid,
 			token,
-			hashedPwd: merchantToLogin.hashedPwd
 		});
 	} catch (err) {
 		console.error("Error querying data:", err);

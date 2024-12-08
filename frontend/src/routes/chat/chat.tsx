@@ -80,9 +80,6 @@ const Chat = () => {
 		setFormValue("");
 	};
 
-	// useEffect(() => {
-		
-	// }, [readMessages, setReadMessages]);
 
 	useEffect(() => {
 		dummy.current?.scrollIntoView({ behavior: "smooth" });
@@ -124,7 +121,7 @@ const Chat = () => {
 			const conversation = await msgFetchTools.getConversation(
 				conversationId
 			);
-			// setSafeMessages(conversation);
+
 			// shared secret
 			const sharedSecret = await encTools.deriveSharedSecret(
 				receiverUid ?? ""
@@ -144,7 +141,6 @@ const Chat = () => {
 
 	useEffect(() => {
 
-		//pollMessages();
 		const intervalId: NodeJS.Timeout = setInterval(pollMessages, 15000); // 15 seconds
 		dummy.current?.scrollIntoView({ behavior: "smooth" });
 		// Cleanup interval on component unmount
@@ -152,22 +148,8 @@ const Chat = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [conversationId]);
 
-	// use setInterval method to poll messages every 15-30 seconds, or whenever the user sends a message
-	// should be able to decrypt with the recipient public key and private key for all messages
-
-	// get recipient public Key (inside use effect)
-	// get using Merchant.findOne({ uid }) since we already have id property
-	// probably should extrapolate all encryption and decryption into a hook
-
 	return (
 		<div className="chat-room">
-			{/* <div className="message-container">
-				{readMessages &&
-					readMessages.map((msg) => (
-						<ChatMessage key={msg._id} message={msg} />
-					))}
-				<div ref={dummy}></div>
-			</div> */}
 			{readMessages &&
 					readMessages.map((msg) => (
 						<ChatMessage key={msg._id} message={msg} />
