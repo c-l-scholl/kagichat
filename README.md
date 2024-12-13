@@ -8,9 +8,9 @@ KagiChat generates ECC keys using the elliptic package, specifically Curve25519,
 
 ## How to Run
 Create a .env file with the following fields: MONGO_URI, PORT, and SECRET. 
-MONGO_URI should be a URI for a MongoDB cluster. 
-PORT is the port that ExpressJS will use.
-SECRET is used for creating JWT tokens.
+ - MONGO_URI should be a URI for a MongoDB cluster. 
+ - PORT is the port that ExpressJS will use.
+ - SECRET is used for creating JWT tokens.
 
 ## Start Up
 Then, to start the backend, run
