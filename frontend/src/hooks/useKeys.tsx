@@ -66,16 +66,12 @@ const useKeys = () => {
 				throw new Error("No sender key found while trying DH");
 			}
 
-			
-
 			const derivableRecipPublicKey = recipientKey.getPublic();
 			if (!derivableRecipPublicKey) {
 				throw new Error("cannot derive recipient public key");
 			}
 			
-			const sharedSecret = myKeyPair
-				.derive(derivableRecipPublicKey)
-				.toString(16);
+			const sharedSecret = myKeyPair.derive(derivableRecipPublicKey).toString(16);
 			if (!sharedSecret) {
 				throw new Error("unable to derive shared secret")
 			}
