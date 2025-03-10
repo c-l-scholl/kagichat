@@ -15,10 +15,12 @@ Create a .env file with the following fields: MONGO_URI, PORT, and SECRET.
 ## Start Up
 Then, to start the backend, run
 ```bash
+npm install 
 npm run dev
 ```
 To start the frontend, create a new terminal and run
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
